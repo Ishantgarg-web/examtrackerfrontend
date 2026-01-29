@@ -30,6 +30,7 @@ interface User {
   phoneNumber: string;
   workingStatus: string; // e.g., WORKING, STUDENT
   bachelorDegree: string; // e.g., ENGINEERING, COMMERCE
+  timeZone?: string; // e.g., Asia/Kolkata
   exams: Exam[]; // Array of exams user has selected
 }
 
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       const response: User = await apiClient.getProfile();
-      setUser(response);
+    setUser(response);
     } catch (err: any) {
       console.log('[v0] Auth error:', err);
       // 401 means session expired or user not authenticated - this is expected for unauthenticated users
@@ -115,7 +116,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     error,
     isAuthenticated: !!user, // True if user object exists
-    hasExamSelected: user ? user.exams.length > 0 : false, // Check if any exam is selected
+    hasExamSelected: user
+      ? Array.isArray(user.exams) &&
+        user.exams.length > 0 &&
+        user.exams.some((ex: Exam) => ex?.examId || ex?.examCode)
+      : false,
     logout: handleLogout,
     refetchUser: fetchUser,
   };

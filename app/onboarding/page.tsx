@@ -56,7 +56,11 @@ const isProfileComplete = (user: any) => {
 };
 
 const hasSelectedExam = (user: any) => {
-  return Array.isArray(user?.exams) && user.exams.length > 0;
+  return (
+    Array.isArray(user?.exams) &&
+    user.exams.length > 0 &&
+    user.exams.some((ex: any) => ex?.examId || ex?.examCode)
+  );
 };
 
 export default function OnboardingPage() {
@@ -74,7 +78,7 @@ export default function OnboardingPage() {
     phoneNumber: user?.phoneNumber || '',
     workingStatus: user?.workingStatus || '',
     bachelorDegree: user?.bachelorDegree || '',
-    timeZone: user?.timeZone || 'Asia/Kolkata',
+    timeZone: (user as { timeZone?: string })?.timeZone || 'Asia/Kolkata',
   });
 
   useEffect(() => {
@@ -86,7 +90,7 @@ export default function OnboardingPage() {
       phoneNumber: user.phoneNumber || '',
       workingStatus: user.workingStatus || '',
       bachelorDegree: user.bachelorDegree || '',
-      timeZone: user.timeZone || 'Asia/Kolkata',
+      timeZone: (user as { timeZone?: string }).timeZone || 'Asia/Kolkata',
     });
 
     if (!isProfileComplete(user)) {
@@ -144,6 +148,8 @@ export default function OnboardingPage() {
     try {
       await apiClient.updateProfile(profileData);
       await refetchUser();
+      // Move to exam selection step after successful profile save
+      setStep(2);
     } catch (err: any) {
       setApiError(
         err.message || 'Failed to update profile. Please try again.'
@@ -230,7 +236,7 @@ export default function OnboardingPage() {
                   Email Address (Read-only)
                 </Label>
                 <div className="mt-2 px-4 py-2 rounded-md border border-border/50 bg-muted/30 text-muted-foreground">
-                  {user.Email}
+                  {user.userEmail}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
                   Your email cannot be changed

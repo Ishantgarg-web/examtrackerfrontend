@@ -83,6 +83,16 @@ class ApiClient {
   }
 
   /**
+   * Logout the current user
+   * @returns Confirmation of logout
+   */
+  async logout() {
+    return this.fetch('/auth/logout', {
+      method: 'POST',
+    });
+  }
+
+  /**
    * Update user profile information
    * @param data - Profile fields to update
    * @returns Updated user profile

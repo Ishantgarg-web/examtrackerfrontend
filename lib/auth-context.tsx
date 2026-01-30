@@ -103,11 +103,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Handle user logout
-   * Clears local state; backend handles session destruction via cookies
+   * Calls backend logout endpoint and clears local state
    */
-  const handleLogout = () => {
-    setUser(null);
-    // JWT cookie is automatically cleared by backend when logout endpoint is called
+  const handleLogout = async () => {
+    try {
+      await apiClient.logout();
+    } catch (err) {
+      console.error('[v0] Logout error:', err);
+    } finally {
+      setUser(null);
+      // JWT cookie is automatically cleared by backend when logout endpoint is called
+    }
   };
 
   // Create context value with all auth state and methods

@@ -1,14 +1,8 @@
 'use client';
 
+import { Header } from '@/components/header';
 import { StreakCelebrationModal } from '@/components/streak-celebration-modal';
 import { TaskCard } from '@/components/task-card';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { apiClient } from '@/lib/api-client';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
@@ -72,6 +66,11 @@ export default function DashboardPage() {
     longestStreak: 0,
   });
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+  };
 
   // Redirect if not authenticated or exam not selected
   useEffect(() => {
@@ -136,7 +135,6 @@ export default function DashboardPage() {
         };
       });
 
-
       // Show celebration if day is completed
       if (response.dayCompleted) {
         setCelebration({
@@ -156,10 +154,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
+
 
   // Format date for display
   const formatDate = (dateString: string): string => {
@@ -201,30 +196,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
       {/* Header */}
-      <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50 bg-background/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ExamReady
-            </h1>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                {user?.userName}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem disabled>
-                {user?.userEmail}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

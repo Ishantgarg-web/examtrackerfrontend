@@ -101,41 +101,16 @@ export default function DashboardPage() {
     }
   }, [isAuthenticated, hasExamSelected]);
 
-  const handleCompleteTask = async (taskId: string) => {
+    const handleCompleteTask = async (taskId: string) => {
     if (!dashboardData) return;
 
     setCompletingTaskId(taskId);
+    setError(null);
+
     try {
       const response = await apiClient.completeTask(taskId);
-      const todayStr = new Date().toISOString().split('T')[0];
-      // Update dashboard data with response
-      setDashboardData((prev) => {
-        if (!prev) return prev;
 
-        return {
-          ...prev,
-          currentStreak: response.currentStreak ?? prev.currentStreak,
-          longestStreak: response.longestStreak ?? prev.longestStreak,
-          days: prev.days.map((day) => {
-            // ✅ ONLY update today's day
-            if (day.date !== todayStr) {
-              return day;
-            }
-
-            return {
-              ...day,
-              tasks: day.tasks.map((task) =>
-                task.taskId === taskId
-                  ? { ...task, isTaskCompleted: true, isEditable: false }
-                  : task
-              ),
-              isDayComplete: Boolean(response.dayCompleted),
-            };
-          }),
-        };
-      });
-
-      // Show celebration if day is completed
+      // 🎉 Show celebration (based on backend response)
       if (response.dayCompleted) {
         setCelebration({
           show: true,
@@ -144,15 +119,19 @@ export default function DashboardPage() {
         });
       }
 
+      // 🔥 REFRESH dashboard from server (source of truth)
+      const raw = await apiClient.getDashboard();
+      setDashboardData(mapDashboardResponse(raw));
+
+      // Refresh auth user (streaks / flags if any)
       await refetchUser();
     } catch (err: any) {
-      setError(
-        err.message || 'Failed to complete task. Please try again.'
-      );
+      setError(err.message || 'Failed to complete task. Please try again.');
     } finally {
       setCompletingTaskId(null);
     }
   };
+
 
 
 

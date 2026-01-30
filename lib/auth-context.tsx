@@ -106,15 +106,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Calls backend logout endpoint and clears local state
    */
   const handleLogout = async () => {
-    try {
-      await apiClient.logout();
-    } catch (err) {
-      console.error('[v0] Logout error:', err);
-    } finally {
-      setUser(null);
-      // JWT cookie is automatically cleared by backend when logout endpoint is called
-    }
-  };
+  // 🔥 Optimistic UI update (important)
+  setUser(null);
+  setError(null);
+  setLoading(false);
+
+  try {
+    await apiClient.logout();
+  } catch (err) {
+    console.error('[v0] Logout error:', err);
+    // Even if backend fails, user is logged out on UI
+  }
+};
+
 
   // Create context value with all auth state and methods
   const value: AuthContextType = {

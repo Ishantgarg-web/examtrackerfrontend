@@ -1,18 +1,18 @@
 'use client';
 
-import React from "react"
+import React from "react";
 
 // Feedback Form Page
 // This page allows signed-in users to submit feedback about ExamReady
 // Unauthenticated users are redirected to login
 
-import { useAuth } from '@/lib/auth-context';
-import { redirect } from 'next/navigation';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { apiClient } from '@/lib/api-client';
+import { useAuth } from '@/lib/auth-context';
+import { redirect } from 'next/navigation';
+import { useState } from 'react';
 
 export default function FeedbackPage() {
   const { isAuthenticated, user, loading } = useAuth();
@@ -87,11 +87,6 @@ export default function FeedbackPage() {
             <a href="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               ExamReady
             </a>
-            <nav className="ml-auto">
-              <a href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Back to Dashboard
-              </a>
-            </nav>
           </div>
         </div>
       </header>

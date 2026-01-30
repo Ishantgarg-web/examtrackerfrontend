@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 export function Header() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogoClick = () => {
@@ -29,15 +29,16 @@ export function Header() {
     router.push('/profile');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setDropdownOpen(false);
-    logout();
-    router.push('/');
+    await logout();
+    router.replace('/'); // replace avoids back navigation to protected pages
   };
 
   return (
     <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50 bg-background/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        {/* Left section */}
         <div className="flex items-center gap-8">
           <button
             onClick={handleLogoClick}
@@ -47,7 +48,9 @@ export function Header() {
               ExamReady
             </h1>
           </button>
-          {user && (
+
+          {/* Dashboard button only when logged in */}
+          {isAuthenticated && (
             <Button
               variant="default"
               size="sm"
@@ -57,29 +60,34 @@ export function Header() {
             </Button>
           )}
         </div>
-        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
+
+        {/* Right section — ONLY when authenticated */}
+        {isAuthenticated && user && (
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                onMouseEnter={() => setDropdownOpen(true)}
+              >
+                {user.userEmail}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
               onMouseEnter={() => setDropdownOpen(true)}
+              onMouseLeave={() => setDropdownOpen(false)}
             >
-              {user?.userEmail}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
-            <DropdownMenuItem onClick={handleProfileClick}>
-              Your profile
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout}>
-              Sign out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem onClick={handleProfileClick}>
+                Your profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </header>
   );

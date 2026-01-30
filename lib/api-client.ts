@@ -62,7 +62,9 @@ class ApiClient {
         console.error('[v0] API error response:', error);
         throw error;
       }
-
+      if (response.status === 204) {
+        return undefined as T;
+      }
       const data = await response.json();
       console.log('[v0] API Response data received');
       return data as T;
@@ -84,11 +86,11 @@ class ApiClient {
 
   /**
    * Logout the current user
-   * @returns Confirmation of logout
+   * Clears HttpOnly JWT cookie on backend
    */
-  async logout() {
-    return this.fetch('/auth/logout', {
-      method: 'POST',
+  async logout(): Promise<void> {
+    return this.fetch<void>('/users/logout', {
+      method: 'GET',
     });
   }
 
@@ -156,7 +158,7 @@ class ApiClient {
     subject: string;
     message: string;
   }) {
-    return this.fetch('/feedback', {
+    return this.fetch('/users/feedback', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -167,3 +169,4 @@ class ApiClient {
 export const apiClient = new ApiClient(API_BASE_URL);
 
 export type { ApiError };
+

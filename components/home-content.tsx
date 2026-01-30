@@ -1,5 +1,6 @@
 'use client';
 
+import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import Image from 'next/image';
@@ -10,15 +11,7 @@ export function HomeContent() {
   const router = useRouter();
   const { isAuthenticated, hasExamSelected, loading } = useAuth();
 
-  const handleLogoClick = () => {
-    router.push('/');
-  };
-
-  const handleDashboardClick = () => {
-    router.push('/dashboard');
-  };
-
-  // 🔁 Only redirect case: authenticated but exam NOT selected
+  // 🔁 Only redirect case: logged in but exam not selected
   useEffect(() => {
     if (!loading && isAuthenticated && !hasExamSelected) {
       router.replace('/onboarding');
@@ -39,57 +32,8 @@ export function HomeContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
-      {/* Header */}
-      <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50 bg-background/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              {/* Logo */}
-              <button
-                onClick={handleLogoClick}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  ExamReady
-                </div>
-              </button>
-
-              {/* Dashboard button (only when logged in & exam selected) */}
-              {isAuthenticated && hasExamSelected && (
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={handleDashboardClick}
-                >
-                  Dashboard
-                </Button>
-              )}
-            </div>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex gap-8">
-              <a
-                href="#features"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Features
-              </a>
-              <a
-                href="#how-it-works"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                How It Works
-              </a>
-              <a
-                href="#contact"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Contact
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      {/* ✅ Shared Header (same as Dashboard) */}
+      <Header />
 
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 overflow-hidden">
@@ -106,8 +50,9 @@ export function HomeContent() {
                 </p>
               </div>
 
-              <div className="pt-4">
-                {!isAuthenticated && (
+              {/* CTA only for logged-out users */}
+              {!isAuthenticated && (
+                <div className="pt-4">
                   <Button
                     onClick={() => router.push('/login')}
                     size="lg"
@@ -115,8 +60,8 @@ export function HomeContent() {
                   >
                     Start Today&apos;s Tasks for CAT
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             <div className="hidden lg:block">

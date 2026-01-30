@@ -16,6 +16,14 @@ export function Header() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const handleLogoClick = () => {
+    router.push('/');
+  };
+
+  const handleDashboardClick = () => {
+    router.push('/dashboard');
+  };
+
   const handleProfileClick = () => {
     setDropdownOpen(false);
     router.push('/profile');
@@ -30,10 +38,24 @@ export function Header() {
   return (
     <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50 bg-background/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            ExamReady
-          </h1>
+        <div className="flex items-center gap-8">
+          <button
+            onClick={handleLogoClick}
+            className="cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              ExamReady
+            </h1>
+          </button>
+          {user && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleDashboardClick}
+            >
+              Dashboard
+            </Button>
+          )}
         </div>
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>

@@ -1,23 +1,31 @@
-'use client'; // This component uses React hooks and client-side features
+'use client';
 
-// Imports for UI components and utilities
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
-import { redirect } from 'next/navigation';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-/**
- * HomeContent Component
- * Main landing page content that uses authentication context
- * Handles redirects for authenticated users and displays marketing content for new users
- * This is separated into its own client component to ensure auth context is available
- */
 export function HomeContent() {
-  // Get authentication state from context
-  // This hook is safe to use here because this component is wrapped by AuthProvider via Providers
+  const router = useRouter();
   const { isAuthenticated, hasExamSelected, loading } = useAuth();
 
-  // Show loading state while checking authentication
+  const handleLogoClick = () => {
+    router.push('/');
+  };
+
+  const handleDashboardClick = () => {
+    router.push('/dashboard');
+  };
+
+  // 🔁 Only redirect case: authenticated but exam NOT selected
+  useEffect(() => {
+    if (!loading && isAuthenticated && !hasExamSelected) {
+      router.replace('/onboarding');
+    }
+  }, [loading, isAuthenticated, hasExamSelected, router]);
+
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -29,36 +37,53 @@ export function HomeContent() {
     );
   }
 
-  // Redirect authenticated users who have selected an exam to dashboard
-  if (isAuthenticated && hasExamSelected) {
-    redirect('/dashboard');
-  }
-
-  // Redirect authenticated users who haven't selected an exam to onboarding
-  if (isAuthenticated && !hasExamSelected) {
-    redirect('/onboarding');
-  }
-
-  // Render landing page for unauthenticated users
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
-      {/* Header Navigation */}
-      <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50">
+      {/* Header */}
+      <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50 bg-background/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ExamReady
+            <div className="flex items-center gap-8">
+              {/* Logo */}
+              <button
+                onClick={handleLogoClick}
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  ExamReady
+                </div>
+              </button>
+
+              {/* Dashboard button (only when logged in & exam selected) */}
+              {isAuthenticated && hasExamSelected && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleDashboardClick}
+                >
+                  Dashboard
+                </Button>
+              )}
             </div>
-            {/* Navigation Links */}
+
+            {/* Navigation */}
             <nav className="hidden md:flex gap-8">
-              <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <a
+                href="#features"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Features
               </a>
-              <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <a
+                href="#how-it-works"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 How It Works
               </a>
-              <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <a
+                href="#contact"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Contact
               </a>
             </nav>
@@ -66,68 +91,34 @@ export function HomeContent() {
         </div>
       </header>
 
-      {/* Hero Section - Main value proposition */}
+      {/* Hero Section */}
       <section className="relative py-20 sm:py-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content - Headline and CTA */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-5xl sm:text-6xl font-bold leading-tight text-balance">
+                <h1 className="text-5xl sm:text-6xl font-bold leading-tight">
                   Master Your Exam Preparation
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-lg text-balance">
-                  Build an unbreakable streak of consistent study habits. Daily focused tasks designed for competitive exam excellence.
+                <p className="text-xl text-muted-foreground max-w-lg">
+                  Build an unbreakable streak of consistent study habits.
+                  Daily focused tasks designed for competitive exam excellence.
                 </p>
               </div>
 
-              {/* Key Benefits List */}
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Daily Structured Tasks</h3>
-                    <p className="text-sm text-muted-foreground">Carefully curated exam-specific challenges delivered every day</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Streak-Based Consistency</h3>
-                    <p className="text-sm text-muted-foreground">Track your preparation journey with current and longest streak metrics</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Professional Discipline</h3>
-                    <p className="text-sm text-muted-foreground">Built for serious candidates who demand serious preparation tools</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Button */}
               <div className="pt-4">
-                <Button
-                  onClick={() => window.location.href = '/login'}
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-                >
-                  Start Today's Tasks for CAT
-                </Button>
-                <p className="text-xs text-muted-foreground mt-3">
-                  Secure Google authentication • No credit card required
-                </p>
+                {!isAuthenticated && (
+                  <Button
+                    onClick={() => router.push('/login')}
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                  >
+                    Start Today&apos;s Tasks for CAT
+                  </Button>
+                )}
               </div>
             </div>
 
-            {/* Right Image - Hero visual */}
             <div className="hidden lg:block">
               <div className="relative h-96 rounded-xl overflow-hidden border border-border/50 shadow-2xl">
                 <Image

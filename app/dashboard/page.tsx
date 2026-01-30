@@ -1,11 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth-context';
-import { apiClient } from '@/lib/api-client';
-import { TaskCard } from '@/components/task-card';
 import { StreakCelebrationModal } from '@/components/streak-celebration-modal';
+import { TaskCard } from '@/components/task-card';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,6 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { apiClient } from '@/lib/api-client';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface Task {
   taskId: string;
@@ -31,6 +31,25 @@ interface DashboardData {
   currentStreak: number;
   longestStreak: number;
   days: DayData[];
+}
+
+/** Map API response (taskCompleted, editable, dayComplete) to frontend shape and reverse days (today first) */
+function mapDashboardResponse(raw: any): DashboardData {
+  const days: DayData[] = (raw?.days ?? []).map((day: any) => ({
+    date: day.date,
+    isDayComplete: Boolean(day.dayComplete),
+    tasks: (day.tasks ?? []).map((t: any) => ({
+      taskId: t.taskId,
+      taskTitle: t.taskTitle,
+      isTaskCompleted: Boolean(t.taskCompleted),
+      isEditable: Boolean(t.editable),
+    })),
+  }));
+  return {
+    currentStreak: raw?.currentStreak ?? 0,
+    longestStreak: raw?.longestStreak ?? 0,
+    days: days.reverse(),
+  };
 }
 
 interface CelebrationState {
@@ -67,8 +86,8 @@ export default function DashboardPage() {
       try {
         setLoading(true);
         setError(null);
-        const data = await apiClient.getDashboard();
-        setDashboardData(data);
+        const raw = await apiClient.getDashboard();
+        setDashboardData(mapDashboardResponse(raw));
       } catch (err: any) {
         setError(
           err.message || 'Failed to load dashboard. Please try again.'
@@ -89,27 +108,34 @@ export default function DashboardPage() {
     setCompletingTaskId(taskId);
     try {
       const response = await apiClient.completeTask(taskId);
-
+      const todayStr = new Date().toISOString().split('T')[0];
       // Update dashboard data with response
       setDashboardData((prev) => {
         if (!prev) return prev;
+
         return {
           ...prev,
-          currentStreak: response.currentStreak,
-          longestStreak: response.longestStreak,
-          days: prev.days.map((day) => ({
-            ...day,
-            tasks: day.tasks.map((task) =>
-              task.taskId === taskId
-                ? { ...task, isTaskCompleted: true, isEditable: false }
-                : task
-            ),
-            isDayComplete: response.dayCompleted
-              ? true
-              : day.isDayComplete,
-          })),
+          currentStreak: response.currentStreak ?? prev.currentStreak,
+          longestStreak: response.longestStreak ?? prev.longestStreak,
+          days: prev.days.map((day) => {
+            // ✅ ONLY update today's day
+            if (day.date !== todayStr) {
+              return day;
+            }
+
+            return {
+              ...day,
+              tasks: day.tasks.map((task) =>
+                task.taskId === taskId
+                  ? { ...task, isTaskCompleted: true, isEditable: false }
+                  : task
+              ),
+              isDayComplete: Boolean(response.dayCompleted),
+            };
+          }),
         };
       });
+
 
       // Show celebration if day is completed
       if (response.dayCompleted) {
@@ -185,12 +211,12 @@ export default function DashboardPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
-                {user?.username}
+                {user?.userName}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem disabled>
-                {user?.email}
+                {user?.userEmail}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 Sign Out

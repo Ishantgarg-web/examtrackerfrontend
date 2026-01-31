@@ -255,7 +255,7 @@ export function HomeContent() {
               © 2026 ExamReady. All rights reserved.
             </p>
             <p className="text-xs text-muted-foreground mt-4 md:mt-0 text-center md:text-right max-w-md">
-              ExamReady is an independent preparation platform and is not affiliated with or endorsed by CAT or any official examining body.
+              ExamReady provides independently developed preparation tools and content and does not offer official study materials for any examination.
             </p>
           </div>
         </div>

@@ -192,11 +192,11 @@ export default function DashboardPage() {
           <div className="border border-border/50 rounded-lg p-6 bg-card/50 backdrop-blur">
             <p className="text-sm text-muted-foreground mb-2">Target Exam</p>
             <h3 className="text-2xl font-bold">{exam?.examCode}</h3>
-            <p className="text-xs text-muted-foreground mt-2">
+            {/* <p className="text-xs text-muted-foreground mt-2">
               {exam?.attemptType === 'FIRST_TIME'
                 ? 'First Attempt'
                 : 'Retry Attempt'}
-            </p>
+            </p> */}
           </div>
 
           {/* Current Streak Card */}

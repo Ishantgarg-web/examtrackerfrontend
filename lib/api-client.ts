@@ -35,44 +35,62 @@ class ApiClient {
    * @throws ApiError if the request fails
    */
   private async fetch<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    try {
-      const url = `${this.baseUrl}${endpoint}`;
-      console.log('[v0] API Request:', { method: options.method || 'GET', url });
-      
-      const response = await fetch(url, {
-        ...options,
-        // Include cookies for JWT authentication
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
-      });
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = `${this.baseUrl}${endpoint}`;
+  console.log('[v0] API Request:', { method: options.method || 'GET', url });
 
-      console.log('[v0] API Response:', { status: response.status, ok: response.ok });
+  const response = await fetch(url, {
+    ...options,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 
-      if (!response.ok) {
-        const error: ApiError = {
-          message: `API Error: ${response.statusText}`,
-          status: response.status,
-        };
-        console.error('[v0] API error response:', error);
-        throw error;
-      }
-      if (response.status === 204) {
-        return undefined as T;
-      }
-      const data = await response.json();
-      console.log('[v0] API Response data received');
-      return data as T;
-    } catch (error: any) {
-      console.error('[v0] API fetch error:', error);
-      throw error;
-    }
+  console.log('[v0] API Response:', { status: response.status, ok: response.ok });
+
+  let data: any = null;
+
+  // Try to parse JSON if present
+  try {
+    const text = await response.text();
+    data = text ? JSON.parse(text) : null;
+  } catch (e) {
+    data = null;
   }
+
+  if (!response.ok) {
+    const error: ApiError = {
+      message:
+        data?.message ||
+        data?.error ||
+        (response.status === 400
+          ? 'Invalid request'
+          : response.status === 401
+          ? 'You are not logged in'
+          : response.status === 403
+          ? 'You are not allowed to perform this action'
+          : response.status === 404
+          ? 'Resource not found'
+          : 'Something went wrong. Please try again.'),
+      status: response.status,
+    };
+
+    console.error('[v0] API error response:', error);
+    throw error;
+  }
+
+  if (response.status === 204 || data === null) {
+    return undefined as T;
+  }
+
+  console.log('[v0] API Response data received');
+  return data as T;
+}
+
 
   // ========== User & Authentication APIs ==========
 

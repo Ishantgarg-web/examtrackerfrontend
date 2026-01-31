@@ -159,7 +159,7 @@ export function HomeContent() {
               <div className="pb-8">
                 <h3 className="text-xl font-semibold mb-2">Complete Your Profile</h3>
                 <p className="text-muted-foreground">
-                  Tell us about your background, work status, and timezone so we can personalize your experience.
+                  Tell us about your background, work status so we can personalize your experience.
                 </p>
               </div>
             </div>
@@ -175,7 +175,7 @@ export function HomeContent() {
               <div className="pb-8">
                 <h3 className="text-xl font-semibold mb-2">Select Your Exam</h3>
                 <p className="text-muted-foreground">
-                  Choose CAT as your exam target. This selection shapes your personalized preparation path.
+                  Choose your target exam. This selection shapes your personalized preparation path.
                 </p>
               </div>
             </div>

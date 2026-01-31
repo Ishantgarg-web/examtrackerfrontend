@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
         <div className="prose prose-invert max-w-none space-y-6">
           <h1 className="text-4xl font-bold">Privacy Policy</h1>
           <p className="text-muted-foreground text-lg">
-            Last updated: January 26, 2026
+            Last updated: January 31, 2026
           </p>
 
           <section className="space-y-4">
@@ -100,15 +100,15 @@ export default function PrivacyPolicyPage() {
             </ul>
           </section>
 
-          <section className="space-y-4">
+          {/* <section className="space-y-4">
             <h2 className="text-2xl font-bold">6. Cookies</h2>
             <p>
               We use cookies and similar tracking technologies to enhance your experience. These include session cookies (which are deleted when you close your browser) and authentication cookies that maintain your login session.
             </p>
-          </section>
+          </section> */}
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold">7. Your Rights</h2>
+            <h2 className="text-2xl font-bold">6. Your Rights</h2>
             <p>
               Depending on your location, you may have the right to:
             </p>
@@ -116,22 +116,21 @@ export default function PrivacyPolicyPage() {
               <li>Access your personal data</li>
               <li>Correct inaccurate information</li>
               <li>Request deletion of your data</li>
-              <li>Opt-out of certain data uses</li>
             </ul>
             <p>
-              To exercise these rights, please contact us at privacy@examready.com
+              To exercise these rights, please contact us through Feedback page.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold">8. Changes to This Policy</h2>
+            <h2 className="text-2xl font-bold">7. Changes to This Policy</h2>
             <p>
               We may update this Privacy Policy from time to time. We will notify you of significant changes by updating the "Last Updated" date and posting the new version on this page.
             </p>
           </section>
 
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold">9. Contact Us</h2>
+          {/* <section className="space-y-4">
+            <h2 className="text-2xl font-bold">8. Contact Us</h2>
             <p>
               If you have questions about this Privacy Policy or our privacy practices, please contact us at:
             </p>
@@ -139,7 +138,7 @@ export default function PrivacyPolicyPage() {
               <p>Email: privacy@examready.com</p>
               <p>Address: ExamReady, India</p>
             </div>
-          </section>
+          </section> */}
         </div>
       </main>
     </div>

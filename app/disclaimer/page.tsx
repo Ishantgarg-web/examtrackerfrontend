@@ -25,16 +25,16 @@ export default function DisclaimerPage() {
         <div className="prose prose-invert max-w-none space-y-6">
           <h1 className="text-4xl font-bold">Disclaimer</h1>
           <p className="text-muted-foreground text-lg">
-            Last updated: January 26, 2026
+            Last updated: January 31, 2026
           </p>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-bold">1. No Official Affiliation</h2>
             <p>
-              ExamReady is an independent preparation platform and is not affiliated with, endorsed by, or officially associated with the Common Admission Test (CAT) or the Indian Institutes of Management (IIM). CAT is a registered trademark of the IIMs.
+              ExamReady is an independent exam preparation platform and is not affiliated with, endorsed by, or officially associated with any exam-conducting body or institution. All trademarks, logos, and exam names mentioned belong to their respective owners.
             </p>
             <p className="text-amber-600 bg-amber-950/30 border border-amber-900/50 rounded-lg p-4">
-              <strong>Important:</strong> ExamReady provides preparation materials and tools independently developed and are not official study materials from CAT or IIM.
+              <strong>Important:</strong> ExamReady provides independently developed preparation tools and content and does not offer official study materials for any examination.
             </p>
           </section>
 
@@ -117,7 +117,7 @@ export default function DisclaimerPage() {
             </p>
           </section>
 
-          <section className="space-y-4">
+          {/* <section className="space-y-4">
             <h2 className="text-2xl font-bold">11. Contact</h2>
             <p>
               For questions or concerns about this disclaimer, please contact us at:
@@ -126,7 +126,7 @@ export default function DisclaimerPage() {
               <p>Email: disclaimer@examready.com</p>
               <p>Address: ExamReady, India</p>
             </div>
-          </section>
+          </section> */}
         </div>
       </main>
     </div>

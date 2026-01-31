@@ -25,7 +25,7 @@ export default function TermsAndConditionsPage() {
         <div className="prose prose-invert max-w-none space-y-6">
           <h1 className="text-4xl font-bold">Terms and Conditions</h1>
           <p className="text-muted-foreground text-lg">
-            Last updated: January 26, 2026
+            Last updated: January 31, 2026
           </p>
 
           <section className="space-y-4">
@@ -122,7 +122,7 @@ export default function TermsAndConditionsPage() {
             </p>
           </section>
 
-          <section className="space-y-4">
+          {/* <section className="space-y-4">
             <h2 className="text-2xl font-bold">11. Contact Information</h2>
             <p>
               If you have questions about these Terms and Conditions, please contact us at:
@@ -131,7 +131,7 @@ export default function TermsAndConditionsPage() {
               <p>Email: legal@examready.com</p>
               <p>Address: ExamReady, India</p>
             </div>
-          </section>
+          </section> */}
         </div>
       </main>
     </div>

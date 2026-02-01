@@ -15,11 +15,12 @@ export default function LoginPage() {
       // For now, we'll open a Google OAuth consent screen
       // You'll need to replace this with your actual backend OAuth URL
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      // const redirectUri = `${window.location.origin}/auth/callback`;
-      
-      // const clientId = "157182042595-ironqc7ilripav5ek0tbj1kfu4m5pcu5.apps.googleusercontent.com";
-      const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_AUTH_REDIRECT_URI;
 
+      const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_AUTH_REDIRECT_URI;
+      
+      console.log('GOOGLE CLIENT ID:', process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+
+      
       if (!clientId) {
         console.error('Google Client ID not configured');
         alert('Google OAuth is not properly configured. Please contact support.');

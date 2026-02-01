@@ -4,7 +4,7 @@
 
 // API base URL - configure via NEXT_PUBLIC_API_URL environment variable
 // Defaults to localhost:8000/api which matches the Spring Boot backend port
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
 
 // Interface for API error responses
 interface ApiError {

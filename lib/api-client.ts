@@ -118,17 +118,24 @@ class ApiClient {
    * @returns Updated user profile
    */
   async updateProfile(data: {
-    username: string;
-    phoneNumber: string;
-    workingStatus: string;
-    bachelorDegree: string;
-    timeZone: string;
-  }) {
-    return this.fetch('/users/me', {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-  }
+  username: string;
+  phoneNumber: string;
+  workingStatus: string;
+  bachelorDegree: string;
+  timeZone: string;
+}) {
+  return this.fetch('/users/me', {
+    method: 'PUT',
+    body: JSON.stringify({
+      userName: data.username,   // 👈 FIX HERE
+      phoneNumber: data.phoneNumber,
+      workingStatus: data.workingStatus,
+      bachelorDegree: data.bachelorDegree,
+      timeZone: data.timeZone,
+    }),
+  });
+}
+
 
   /**
    * Select an exam for the user (one-time, irreversible action)
